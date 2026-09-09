@@ -1,1 +1,1 @@
-# retai_data_platform
+# retail_data_platform
