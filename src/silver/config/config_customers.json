@@ -1,0 +1,24 @@
+{
+  "source" : {
+    "base_path" : "retail_data_platform",
+    "folder_path" : ".bronze_layer.sqlserver_customers",
+    "target_path" : ".silver.customers"
+
+  },
+  "target" : {
+    "base_path" : "retail_data_platform",
+    "target_path" : ".silver.customers"
+  },
+  
+  "write_options" : {
+    "format" : "delta",
+    "mode" : "overwrite"
+    
+  },
+
+
+  "drop_columns" : ["file_path", "customer_name"] ,
+  "merge_condition" : "target.customer_id = source.customer_id"
+
+
+}
