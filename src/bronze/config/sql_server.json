@@ -1,0 +1,23 @@
+{
+  "source" : {
+  "raw_folder" : "sqlserver_customers",
+  "source_name" : "sqlserver_customers",
+  "source_table" : "/Volumes/retail_data_platform/bronze/raw_data/"
+  },
+  "target" : {
+    "target_table" : "retail_data_platform.bronze.sqlserver_customers"
+  },
+  "read_options" : {
+    "header" : "true",
+    "inferSchema" : "true"
+
+  },
+  "write_options" : {
+    "mode" : "overwrite"
+  },
+  "format" : { 
+    "file_format" : "csv"
+     }
+}
+
+        

@@ -1,0 +1,21 @@
+{
+  "source" : {
+  "raw_folder" : "cosmosdb_sales_ingestion",
+  "source_name" : "cosmos_db",
+  "source_table" : "/Volumes/retail_data_platform/bronze/raw_data/"
+  },
+  "target" : {
+    "target_table" : "retail_data_platform.bronze.cosmosdb_sales_ingestion"
+  },
+  "read_options" : {
+    "header" : "true",
+    "inferSchema" : "true"
+
+  },
+  "write_options" : {
+    "mode" : "overwrite"
+  },
+  "format" : { 
+    "file_format" : "json"
+     }
+}

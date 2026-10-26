@@ -1,24 +1,75 @@
 {
-  "source" : {
-    "base_path" : "retail_data_platform",
-    "folder_path" : ".bronze_layer.sqlserver_customers",
-    "target_path" : ".silver.customers"
-
+  "source": {
+    "source_table": "retail_data_platform.bronze.sqlserver_customers",
+    "source_name": "sqlserver_customers"
   },
-  "target" : {
-    "base_path" : "retail_data_platform",
-    "target_path" : ".silver.customers"
+  "target": {
+    "target_table": "retail_data_platform.silver.customers",
+    "write_mode": "merge"
   },
-  
-  "write_options" : {
-    "format" : "delta",
-    "mode" : "overwrite"
-    
+  "cast_columns": {
+    "customer_id": "long",
+    "tax_id": "string",
+    "tax_code": "string",
+    "city": "string",
+    "postcode": "string",
+    "street": "string",
+    "number": "string",
+    "unit": "string",
+    "region": "string",
+    "district": "string",
+    "lon": "double",
+    "lat": "double",
+    "units_purchased": "long",
+    "loyalty_segment": "string",
+    "last_update_timestamp": "timestamp"
   },
-
-
-  "drop_columns" : ["file_path", "customer_name"] ,
-  "merge_condition" : "target.customer_id = source.customer_id"
-
-
+  "select_columns": [
+    "customer_id",
+    "first_name",
+    "last_name",
+    "tax_id",
+    "tax_code",
+    "country",
+    "state",
+    "city",
+    "postcode",
+    "street",
+    "number",
+    "unit",
+    "region",
+    "district",
+    "lon",
+    "lat",
+    "ship_to_address",
+    "valid_from",
+    "valid_to",
+    "units_purchased",
+    "loyalty_segment",
+    "last_update_timestamp"
+  ],
+  "drop_columns": [
+    "file_path",
+    "customer_name"
+  ],
+  "rename_columns": {},
+  "dedplication": {
+    "enabled": true,
+    "key_columns": [
+      "customer_id"
+    ],
+    "order_by": [
+      {
+        "column": "last_update_timestamp",
+        "direction": "desc",
+        "nulls": "last"
+      }
+    ]
+  },
+  "scd": {
+    "type": 1,
+    "key_columns": [
+      "customer_id"
+    ]
+  }
 }

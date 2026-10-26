@@ -1,0 +1,22 @@
+   
+{
+  "source" : {
+  "raw_folder" : "S3_ingestion",
+  "source_name" : "s3_bucket",
+  "source_table" : "/Volumes/retail_data_platform/bronze/raw_data/"
+  },
+  "target" : {
+    "target_table" : "retail_data_platform.bronze.s3_sales"
+  },
+  "read_options" : {
+    "header" : "true",
+    "inferSchema" : "true"
+
+  },
+  "write_options" : {
+    "mode" : "overwrite"
+  },
+  "format" : { 
+    "file_format" : "parquet"
+     }
+}

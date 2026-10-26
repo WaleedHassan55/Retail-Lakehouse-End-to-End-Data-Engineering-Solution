@@ -1,0 +1,130 @@
+resources:
+  jobs:
+    pl_e2e_Retail_Data_platform:
+      name: pl_e2e_Retail_Data_platform
+
+      description: >-
+        Daily Pipeline for retail data platform, the data is coming from cosmos db, s3 bucket , SQL server
+      email_notifications:
+        on_start:
+          - whassan2855@gmail.com
+        on_success:
+          - whassan2855@gmail.com
+        on_failure:
+          - whassan2855@gmail.com
+          
+      schedule:
+        quartz_cron_expression: 53 10 8 * * ?
+        timezone_id: Europe/London
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: cosmos_db_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/ingestion/notebooks/func_cosmosdb
+            base_parameters:
+              secret_scopt: retail-platform-dev
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/ingestion/config/config_cosmosdb.json
+            source: WORKSPACE
+          max_retries: 2
+          min_retry_interval_millis: 12
+          disable_auto_optimization: false
+          environment_key: platform
+        - task_key: s3_busket_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/ingestion/notebooks/func_s3_bucket
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/ingestion/config/config_s3_bucket.json
+              secret_scope: retail-platform-dev
+            source: WORKSPACE
+        - task_key: sqlserver_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/ingestion/notebooks/func_sqlserver
+            base_parameters:
+              secret_scope: retail-platform-dev
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/ingestion/config/config_sqlserver.json
+            source: WORKSPACE
+        - task_key: Bronze_layer
+          depends_on:
+            - task_key: cosmos_db_ingestion
+            - task_key: s3_busket_ingestion
+            - task_key: sqlserver_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/bronze/notebooks/bronze_layer
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/bronze/config/bronze.json
+            source: WORKSPACE
+        - task_key: Silver_customers
+          depends_on:
+            - task_key: Bronze_layer
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/silver/Notebooks/b2s_customers
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/silver/config/config_customers.json
+            source: WORKSPACE
+        - task_key: dim_customers
+          depends_on:
+            - task_key: Silver_customers
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/notebooks/dim_customers
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/config/config_dim_customer.json
+            source: WORKSPACE
+        - task_key: Silver_sales_orders
+          depends_on:
+            - task_key: Bronze_layer
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/silver/Notebooks/b2s_sales_orders
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/silver/config/config_sale_orders.json
+            source: WORKSPACE
+        - task_key: dim_date
+          depends_on:
+            - task_key: Silver_sales_orders
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/notebooks/dim_date
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/config/config_dim_date.json
+            source: WORKSPACE
+        - task_key: dim_order
+          depends_on:
+            - task_key: Silver_sales_orders
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/notebooks/dim_order
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/config/config_dim_order.json
+            source: WORKSPACE
+        - task_key: silver_sales
+          depends_on:
+            - task_key: Bronze_layer
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/silver/Notebooks/b2s_sales
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/silver/config/config_sales.json
+            source: WORKSPACE
+        - task_key: dim_product
+          depends_on:
+            - task_key: silver_sales
+            - task_key: Silver_sales_orders
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/notebooks/dim_products
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/config/config_dim_product.json
+            source: WORKSPACE
+        - task_key: fact_sales
+          depends_on:
+            - task_key: Silver_sales_orders
+            - task_key: silver_sales
+          notebook_task:
+            notebook_path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/notebooks/fact_sales
+            base_parameters:
+              path: /Workspace/Users/weedi8145@gmail.com/retail_data_platform/src/gold/config/config_fact_sales.json
+            source: WORKSPACE
+      queue:
+        enabled: true
+      environments:
+        - environment_key: platform
+          spec:
+            dependencies:
+              - pymongo== 4.10.1
+            environment_version: "6"
+      performance_target: PERFORMANCE_OPTIMIZED

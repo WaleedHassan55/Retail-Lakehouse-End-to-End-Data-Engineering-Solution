@@ -36,13 +36,13 @@ def bronze_ingestor(df , mode , target_table):
     '''
     logger.info("Adding Audit column into the Dataframe")
 
-    df = df.withColumn('last_update_ts', F.current_timestamp())\
+    df = df.withColumn('last_update_timestamp', F.current_timestamp())\
         .withColumn('file_path', F.col('_metadata.file_path'))
 
     logger.info('writing dalta table : %s', target_table)
     logger.info("Selected mode: %s", mode)
 
 
-    df.write.format('delta').mode(mode).saveAsTable(target_table)
+    df.write.format('delta').mode(mode).option('overwriteSchema', 'true').saveAsTable(target_table)
     return df.count()
 
