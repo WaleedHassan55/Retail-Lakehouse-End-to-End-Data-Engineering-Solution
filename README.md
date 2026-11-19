@@ -1,4 +1,4 @@
-# Retail Data Platform – End-to-End Data Engineering
+# Retail-Lakehouse-End-to-End-Data-Engineering-Solution
 
 ## Overview
 
