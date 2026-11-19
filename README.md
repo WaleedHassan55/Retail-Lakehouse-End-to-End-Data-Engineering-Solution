@@ -1,109 +1,65 @@
-# Retail-Lakehouse-End-to-End Data Engineering
+# Retail Data Platform – End-to-End Data Engineering
 
-An end-to-end data engineering project built using **Azure Databricks, PySpark and Delta Lake**, following the Medallion Architecture to ingest, transform, validate and organise operational retail data into structured datasets ready for analytics.
+## Overview
 
-The platform demonstrates practical data engineering concepts, including ETL pipelines, data quality validation, incremental data processing and Slowly Changing Dimensions (SCD Type 2).
+The Retail Data Platform is an end-to-end data engineering project designed to build a scalable data processing solution using Azure Databricks, PySpark and Delta Lake.
 
-## Project Overview
+The project focuses on ingesting, processing, transforming and managing retail data through a structured data pipeline. It follows the Medallion Architecture (Bronze, Silver and Gold) to ensure data is progressively cleaned, validated and transformed into reliable datasets for business intelligence and analytics.
 
-The objective of this project is to build a scalable data platform that processes retail operational data and transforms raw datasets into reliable, analytics-ready data.
-
-The platform works with operational datasets covering:
-
-- **People:** Employee and workforce information.
-- **Shifts:** Employee shift and scheduling information.
-- **Work:** Operational workforce activities.
-- **Shrinkage:** Retail shrinkage and loss-related information.
-
-The data is processed through different layers using the Medallion Architecture, ensuring that raw data is progressively cleaned, transformed and structured.
+The solution demonstrates how modern data engineering technologies can be used to build maintainable, scalable and reliable data pipelines.
 
 ## Architecture
 
-The project follows the Databricks Medallion Architecture:
+The platform follows the Medallion Architecture:
 
-```text
-             Source Data
-                  |
-                  v
-          Data Ingestion
-                  |
-                  v
-          +---------------+
-          | Bronze Layer  |
-          | Raw Data      |
-          +---------------+
-                  |
-                  v
-          +---------------+
-          | Silver Layer  |
-          | Cleaned Data  |
-          | Validations    |
-          +---------------+
-                  |
-                  v
-          +---------------+
-          | Gold Layer    |
-          | Business-Ready|
-          | Data          |
-          +---------------+
-                  |
-                  v
-          Analytics & Reporting
-```
+**Bronze Layer**
+- Ingests raw data from source systems.
+- Preserves the original structure of incoming datasets.
+- Provides a foundation for downstream processing.
 
-### 1. Bronze Layer – Raw Data
+**Silver Layer**
+- Cleans and standardises incoming data.
+- Handles missing values and duplicate records.
+- Applies data quality checks and transformation logic.
+- Produces consistent and reliable datasets.
 
-The Bronze layer stores ingested source data in its original structure.
-
-Key responsibilities:
-- Ingest data from source files.
-- Preserve raw records.
-- Maintain a foundation for downstream processing.
-- Support traceability and reprocessing.
-
-### 2. Silver Layer – Data Transformation
-
-The Silver layer focuses on cleaning, validating and transforming raw data.
-
-Key responsibilities:
-- Data cleansing and standardisation.
-- Handling missing and invalid values.
-- Removing duplicate records.
-- Applying data quality checks.
-- Preparing structured datasets for further processing.
-
-### 3. Gold Layer – Business-Ready Data
-
-The Gold layer contains transformed datasets designed for downstream analytics and reporting.
-
-Key responsibilities:
-- Organising data for analytical use.
-- Applying business transformation logic.
-- Maintaining historical changes using SCD Type 2.
-- Producing structured datasets for reporting and analysis.
+**Gold Layer**
+- Organises transformed data for analytical purposes.
+- Applies business logic and aggregations.
+- Creates structured datasets for reporting and business intelligence.
+- Supports downstream analytical workloads.
 
 ## Key Features
 
-- **Medallion Architecture:** Implements Bronze, Silver and Gold data processing layers.
-- **ETL Pipelines:** Ingests, transforms and processes operational datasets.
-- **PySpark Transformations:** Uses distributed data processing capabilities.
-- **Delta Lake:** Uses Delta tables for structured data storage.
-- **Data Quality Checks:** Validates data and helps maintain consistency.
-- **SCD Type 2:** Maintains historical records when tracked attributes change.
-- **Modular Code Structure:** Separates ingestion, transformation and reusable utility logic.
-- **Databricks Asset Bundles:** Includes project configuration through `databricks.yml`.
+- End-to-end data ingestion and transformation pipelines.
+- Medallion Architecture implementation.
+- Distributed data processing using PySpark.
+- Delta Lake for reliable data storage and management.
+- Data cleaning and validation.
+- Incremental data processing.
+- Historical data management using SCD Type 2.
+- Modular and reusable pipeline components.
+- Databricks project configuration and deployment.
 
 ## Technology Stack
 
-| Technology | Purpose |
+| Technology | Usage |
 |---|---|
-| Azure Databricks | Data engineering environment |
-| PySpark | Distributed data processing |
+| Azure Databricks | Data engineering and processing |
+| PySpark | Distributed data transformations |
 | Python | Pipeline development |
-| Delta Lake | Reliable data storage |
-| SQL | Data querying and transformation |
-| Databricks Asset Bundles | Project deployment configuration |
+| SQL | Data querying and transformations |
+| Delta Lake | Storage and data management |
+| Databricks Asset Bundles | Deployment and configuration |
 | Git & GitHub | Version control |
+
+## Data Pipeline Workflow
+
+1. **Data Ingestion:** Load retail data from source systems into the platform.
+2. **Raw Storage:** Store the ingested data in the Bronze layer.
+3. **Data Transformation:** Clean, validate and transform datasets in the Silver layer.
+4. **Business Transformation:** Apply business logic and create analytical datasets in the Gold layer.
+5. **Data Consumption:** Make processed data available for reporting and analytics.
 
 ## Project Structure
 
@@ -111,19 +67,10 @@ Key responsibilities:
 retail_data_platform/
 │
 ├── common_utils/
-│   └── Reusable utility functions
-│
 ├── docs/
-│   └── Project documentation
-│
 ├── resources/
-│   └── Pipeline resources and configurations
-│
 ├── src/
-│   └── Source code for data pipelines
-│
 ├── databricks.yml
-│
 └── README.md
 ```
 
@@ -131,77 +78,67 @@ retail_data_platform/
 
 ### Prerequisites
 
-Before running the project, ensure you have:
+- Azure Databricks workspace
+- Python
+- Databricks CLI
+- Git
 
-- An Azure Databricks workspace.
-- Python installed.
-- Access to Databricks.
-- Databricks CLI installed.
-- Git installed.
-
-### 1. Clone the Repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/WaleedHassan55/retail_data_platform.git
 ```
 
-### 2. Navigate to the Project
+### Navigate to the Project
 
 ```bash
 cd retail_data_platform
 ```
 
-### 3. Configure Databricks
-
-Authenticate your Databricks CLI using your workspace credentials and configure the appropriate deployment target in `databricks.yml`.
-
-### 4. Validate the Project Configuration
+### Validate the Bundle
 
 ```bash
 databricks bundle validate
 ```
 
-### 5. Deploy the Project
+### Deploy the Project
 
 ```bash
 databricks bundle deploy
 ```
 
-After deployment, execute the configured pipeline resources according to the project configuration.
+Configure your Databricks authentication and deployment target before running these commands.
 
-## What I Learned
+## Skills Demonstrated
 
-Through this project, I gained practical experience in:
+- Data Engineering
+- ETL/ELT Pipeline Development
+- Medallion Architecture
+- Distributed Data Processing
+- Data Modelling
+- Data Quality and Validation
+- Delta Lake
+- Incremental Data Processing
+- Historical Data Management
+- Cloud Data Engineering
 
-- Designing an end-to-end data engineering solution.
-- Implementing Medallion Architecture in Databricks.
-- Building modular ETL pipelines using PySpark.
-- Working with Delta Lake tables.
-- Implementing data quality validation.
-- Understanding historical data management through SCD Type 2.
-- Organising data engineering projects using reusable components.
-- Managing Databricks project configurations and deployments.
+## Future Enhancements
 
-## Future Improvements
-
-Potential areas for further development include:
-
-- Implementing automated pipeline scheduling using Databricks Workflows.
-- Adding pipeline monitoring and logging.
-- Introducing automated testing and data quality reporting.
-- Integrating additional cloud data sources.
-- Optimising Delta tables and improving processing performance.
-- Developing dashboards using Power BI.
+- Implement automated pipeline orchestration.
+- Introduce comprehensive pipeline monitoring.
+- Improve data quality reporting.
+- Integrate additional data sources.
+- Optimise processing performance.
+- Connect the Gold layer to Power BI for business reporting.
 
 ## Author
 
-Waleed Hassan
+**Waleed Hassan**
 
-BSc (Hons) Computer Science with Artificial Intelligence | First Class Honours
+BSc (Hons) Computer Science with Artificial Intelligence – First Class Honours
 
-Interested in Data Engineering, Cloud Technologies, Machine Learning and AI.
-
+GitHub: https://github.com/WaleedHassan55
 
 ---
 
-*This project demonstrates practical implementation of modern data engineering concepts using the Databricks Lakehouse platform.*
+*Built to demonstrate modern data engineering practices and the development of scalable retail data platforms using Azure Databricks and PySpark.*
